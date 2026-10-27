@@ -1215,6 +1215,9 @@ private class CameraXLibraryPigeonProxyApiBaseCodec(
         stream.write(128)
         writeValue(stream, registrar.instanceManager.getIdentifierForStrongReference(value))
       }
+      // meal_planner patch: a CameraX callback that completes after the plugin detached from
+      // the engine has nobody to receive it; reply null instead of crashing the main thread.
+      registrar.ignoreCallsToDart -> super.writeValue(stream, null)
       else ->
           throw IllegalArgumentException(
               "Unsupported value: '$value' of type '${value.javaClass.name}'")
